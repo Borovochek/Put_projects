@@ -1,0 +1,28 @@
+.array-card {
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+}
+
+.array-space {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.array-select {
+  width: 150px;
+}
+
+.array-button {
+  width: 150px;
+}
+
+.array-display,
+.array-result {
+  font-size: 14px;
+}
+
+.array-result {
+  color: #1890ff; /* синий цвет для результата */
+}

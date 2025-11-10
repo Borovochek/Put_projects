@@ -1,0 +1,18 @@
+.dates-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dates-card {
+  width: 400px;
+  margin-bottom: 16px;
+}
+
+.sort-button {
+  width: 200px;
+}
+.raw-date {
+  color: #888;
+  font-size: 13px;
+}

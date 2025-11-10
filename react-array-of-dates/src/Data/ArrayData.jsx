@@ -1,0 +1,1 @@
+export const arr = [1, 4, 10, 5, -1, 0];
