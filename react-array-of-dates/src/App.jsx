@@ -1,36 +1,52 @@
-import { Tabs, Card } from "antd";
-import { DatesCard } from "./components/js-tab/DatesCard.jsx";
-import { ArrayCard } from "./components/js-tab/ArrayCard.jsx";
-import "./App.css"; // подключаем глобальные стили
+import { useState, useEffect } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import { JSPage } from './pages/JSPage';
+import { ConverterPage } from './pages/ConverterPage';
+import { OtherPage } from './pages/OtherPage';
+import { CalculatorPage } from './pages/CalculatorPage';
+import { Header } from './components/Layout/Header';
+import { Sidebar } from './components/Layout/Sidebar';
+import { LoginPage } from './pages/LoginPage';
+import './App.css';
 
 function App() {
-  const items = [
-    {
-      key: "1",
-      label: "JS",
-      children: (
-        <div className="tab-content">
-          <DatesCard />
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-          <ArrayCard />
-        </div>
-      ),
-    },
-    {
-      key: "2",
-      label: "Конвертер",
-      children: "Здесь будет конвертер",
-    },
-    {
-      key: "3",
-      label: "Остальное",
-      children: "Другие функции",
-    },
-  ];
+  useEffect(() => {
+    const authStatus = localStorage.getItem('isAuth') === 'true';
+    setIsAuthenticated(authStatus);
+  }, []);
+
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+    localStorage.setItem('isAuth', 'true');
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    localStorage.removeItem('isAuth');
+  };
+
+  if (!isAuthenticated) {
+    return <LoginPage onLogin={handleLogin} />;
+  }
 
   return (
     <div className="app-container">
-      <Tabs defaultActiveKey="1" items={items} />
+      <Header onLogout={handleLogout} />
+      <div className="app-main">
+        <div className="app-sidebar">
+          <Sidebar />
+        </div>
+        <div className="app-content">
+          <Routes>
+            <Route path="/" element={<JSPage />} />
+            <Route path="/converter" element={<ConverterPage />} />
+            <Route path="/other" element={<OtherPage />} />
+            <Route path="/calculator" element={<CalculatorPage />} />
+          </Routes>
+        </div>
+      </div>
     </div>
   );
 }

@@ -1,16 +1,25 @@
-# React + Vite
+# Задача:  Проект на Реакт, сборщик по фиг. Пишется на ANTD
+# Базовая страница , на ней 3 вкладки (табы). JS, Конвертер, Остальное
+ по умолчанию активна вкладка JS
+ в ней две карточки: Даты, Массив
+# Далее: дан массив дат 
+• 04.03.2024 10:00 (GMT +3)
+• 04.04.2024 10:00 (GMT +3)
+• 17.06.2023 13:00 (GMT +3)
+• 18.07.2023 13:00 (GMT +7)
+• 23.07.2021 23:50 (GMT +1)
+• 24.07.2021 00:45 (GMT +3)
+• 04.08.2024 10:00 (GMT +3)
+• 06.04.2024 03:00 (GMT +4)
+именно такой формат, надо сортироовать его по ранней дате и наоборот
+# И еще далее, не связанная с предыдущей
+Предположим , что все известные функции перебора массивов в js еще не придумали, задача написать функцию перебора массива( например [1,4,10,5, -1,0 ])на if. В нее передается сам массив, и задача (например  forEach, some) В зависимости от переданной задачи, возвращается массив, в случае forEach все элементы удваиваются, в случае some возвращается булевое значение был ли хоть один элемент меньше нуля
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+# Issue №1
+- Добавить авторизацию и аутентификацию в проект (можно простейший бек на node.js накидать с парой эндпоинтов и все);
+- Добавить роутинг в проект (разделить то что сейчас сделано через вкладки на разные роуты);
+- Добавить шапку приложения (пока любую) и сайдбар меню (для навигации);
+- Добавить новый раздел - Калькулятор. Сделать простейший калькулятор поддерживающий 5 операций (сложение, вычитание, деление, умножение, возведение в степень);
+- Написать кастомную функцию map которая бы полностью повторяла функционал встроенной в js, но БЕЗ использования циклов;
+- Проект привести к единой стилистике - любой как нравится - хоть в БДСМ красно-черных тонах.

@@ -1,20 +1,22 @@
 .app-container {
   display: flex;
-  justify-content: center;
-  margin-top: 40px;
-  margin-bottom: 80px;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-.tab-content {
+.app-main {
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding-top: 24px;
+  flex: 1;
 }
 
-.cards-row {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 32px; 
+.app-sidebar {
+  width: 260px;
+  background-color: #FFFFFF;
+  border-right: 1px solid #D0D0D0;
+  min-height: calc(100vh - 64px);
+}
+
+.app-content {
+  flex: 1;
+  padding: 24px;
 }

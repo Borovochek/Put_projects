@@ -1,0 +1,14 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "login": "Ant",
+      "password": "daaad6e5604e8e17bd9f108d91e26afe6281dac8fda0091040a7a6d7bd9b43b5"
+    },
+    {
+      "id": 2,
+      "login": "bob",
+      "password": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4"
+    }
+  ]
+}

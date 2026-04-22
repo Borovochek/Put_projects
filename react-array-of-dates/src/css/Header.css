@@ -1,0 +1,28 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 24px;
+  background-color: #FFFFFF;
+  height: 64px;
+  border-bottom: 1px solid #D0D0D0;
+}
+
+.header-title {
+  color: #333333;
+  font-size: 20px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.header button {
+  background-color: #FFFFFF;
+  border-color: #D0D0D0;
+  color: #333333;
+}
+
+.header button:hover {
+  background-color: #FFF1F0 !important;
+  border-color: #FFCCC7 !important;
+  color: #FF4D4F !important;
+}

@@ -1,0 +1,21 @@
+.js-page .ant-card {
+  background-color: #FFFFFF;
+  border: 1px solid #D0D0D0;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.js-page .ant-card-head {
+  border-bottom: 1px solid #D0D0D0;
+  background-color: #FAFAFA;
+}
+
+.js-page .ant-select-selector {
+  background-color: #FFFFFF !important;
+  border-color: #D0D0D0 !important;
+  color: #333333 !important;
+}
+
+.dates-list .ant-list-item {
+  border-bottom-color: #F0F0F0;
+}
