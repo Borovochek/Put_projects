@@ -44,26 +44,29 @@ export const LoginPage = ({ onLogin }) => {
       <Card className="login-card">
         <h2 className="login-title">Вход в приложение</h2>
         <Form
+          className="login-form"
           name="login"
           initialValues={{ remember: true }}
           onFinish={onFinish}
           autoComplete="off"
         >
           <Form.Item
+            className="login-form__item"
             name="username"
             rules={[{ required: true, message: 'Введите ваш логин!' }]}
           >
-            <Input prefix={<UserOutlined />} placeholder="Логин" />
+            <Input className="login-form__input" prefix={<UserOutlined />} placeholder="Логин" />
           </Form.Item>
 
           <Form.Item
+            className="login-form__item"
             name="password"
             rules={[{ required: true, message: 'Введите пароль!' }]}
           >
-            <Input.Password prefix={<LockOutlined />} placeholder="Пароль" />
+            <Input.Password className="login-form__input" prefix={<LockOutlined />} placeholder="Пароль" />
           </Form.Item>
 
-          <Form.Item>
+          <Form.Item className="login-form__item">
             <Button type="primary" htmlType="submit" loading={loading} block>
               Войти
             </Button>

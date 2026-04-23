@@ -114,24 +114,31 @@ export const CalculatorPage = () => {
     }
   };
 
-  return (
-    <div className="calculator-container">
-      <div className="calculator-display">
-        <input type="text" value={display} readOnly />
+ return (
+    <div className="calculator">
+      <div className="calculator__display">
+        <input className="calculator__input" type="text" value={display} readOnly />
       </div>
-      <div className="calculator-buttons">
-        {buttons.map((btn) => (
-          <button
-            key={btn.value}
-            className={`${btn.type === 'operator' ? 'operator' : ''} 
-                   ${btn.value === '=' ? 'equal' : ''}
-                   ${btn.value === 'C' ? 'clear' : ''}
-                   ${btn.value === '←' ? 'delete' : ''}`}
-            onClick={getHandler(btn.action, btn.value)}
-          >
-            {btn.value}
-          </button>
-        ))}
+      <div className="calculator__buttons">
+        {buttons.map((btn) => {
+          let modifier = '';
+          if (btn.type === 'operator') modifier = 'operator';
+          else if (btn.value === '=') modifier = 'equal';
+          else if (btn.value === 'C') modifier = 'clear';
+          else if (btn.value === '←') modifier = 'delete';
+
+          const buttonClass = `calculator__button${modifier ? ` calculator__button--${modifier}` : ''}`;
+
+          return (
+            <button
+              key={btn.value}
+              className={buttonClass}
+              onClick={getHandler(btn.action, btn.value)}
+            >
+              {btn.value}
+            </button>
+          );
+        })}
       </div>
     </div>
   );

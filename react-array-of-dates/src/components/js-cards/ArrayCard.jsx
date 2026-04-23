@@ -22,9 +22,12 @@ const { Option } = Select;
 //     return true;
 //   }
 // };
+// function arrayIteration(array, method) {
+
+
 
 function arrayIteration(array, method) {
-  
+
   function customMap(arr, fn) {
     if (arr.length === 0) {
       return [];
@@ -33,18 +36,41 @@ function arrayIteration(array, method) {
     const rest = customMap(arr.slice(1), fn);
     return [first, ...rest];
   }
-  
+
   if (method === "forEach") {
     const fn = (x) => x * 2;
     return customMap(array, fn);
   }
-  
+
   if (method === "some") {
     const fn = (x) => x < 0;
     const booleanArray = customMap(array, fn);
     return !booleanArray.includes(true);
   }
 }
+
+// Второй вариант кастомной функции
+// function arrayIteration(array, method) {
+
+//     function customMap(arr, fn, result) {
+//         if (arr.length === 0) {
+//             return result; 
+//         }
+//         result.push(fn(arr.shift()));
+//         return customMap(arr, fn, result);
+//     }
+
+//     if (method === "forEach") {
+//         const fn = (x) => x * 2;
+//         return customMap(array, fn, []);
+//     }
+
+//     if (method === "some") {
+//         const fn = (x) => x < 0;
+//         const booleanArray = customMap(array, fn, []);
+//         return !booleanArray.includes(true);
+//     }
+// }
 
 export const ArrayCard = () => {
   const [method, setMethod] = useState("forEach");

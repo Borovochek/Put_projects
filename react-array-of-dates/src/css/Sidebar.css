@@ -9,11 +9,11 @@
   padding: 0;
 }
 
-.sidebar-menu li {
+.sidebar-menu__item {
   margin: 0;
 }
 
-.sidebar-menu li a {
+.sidebar-menu__link {
   display: block;
   padding: 12px 24px;
   color: #333333;
@@ -23,12 +23,12 @@
   margin: 4px 12px;
 }
 
-.sidebar-menu li a:hover {
+.sidebar-menu__link:hover {
   background-color: #F0F0F0;
   color: #1890FF;
 }
 
-.sidebar-menu li a.active {
+.sidebar-menu__link.active {
   background-color: #E6F7FF;
   color: #1890FF;
   font-weight: 500;
