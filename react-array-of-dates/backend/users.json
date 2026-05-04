@@ -3,12 +3,26 @@
     {
       "id": 1,
       "login": "Ant",
-      "password": "daaad6e5604e8e17bd9f108d91e26afe6281dac8fda0091040a7a6d7bd9b43b5"
+      "password": "daaad6e5604e8e17bd9f108d91e26afe6281dac8fda0091040a7a6d7bd9b43b5",
+      "favoriteCurrency": null
     },
     {
       "id": 2,
       "login": "bob",
-      "password": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4"
+      "password": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4",
+      "favoriteCurrency": null
+    },
+    {
+      "id": 3,
+      "login": "a",
+      "password": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+      "favoriteCurrency": null
+    },
+    {
+      "id": 4,
+      "login": "1",
+      "password": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+      "favoriteCurrency": null
     }
   ]
 }

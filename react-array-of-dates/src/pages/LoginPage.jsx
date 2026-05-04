@@ -21,10 +21,12 @@ export const LoginPage = ({ onLogin }) => {
       });
 
       const data = await response.json();
+      console.log(data);
 
       if (data.success) {
         message.success('Вход выполнен успешно!');
-        onLogin();
+        // console.log({ userId: data.userId, favoriteCurrency: data.favoriteCurrency });
+        onLogin({ userId: data.userId, favoriteCurrency: data.favoriteCurrency });
       } else {
         message.error(data.message || 'Ошибка входа');
       }

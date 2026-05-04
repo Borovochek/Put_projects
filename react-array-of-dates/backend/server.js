@@ -47,58 +47,59 @@ function hashPassword(password) {
 // 1. Регистрация
 app.post('/register', (req, res) => {
   const { login, password } = req.body;
-  
+
   // Проверяем, что логин и пароль переданы
   if (!login || !password) {
     return res.status(400).json({ success: false, message: 'Логин и пароль обязательны' });
   }
-  
+
   const usersData = readUsers();
-  
+
   // Проверяем, не занят ли логин
   const userExists = usersData.users.some(user => user.login === login);
   if (userExists) {
     return res.status(400).json({ success: false, message: 'Пользователь с таким логином уже существует' });
   }
-  
+
   // Создаём нового пользователя
-  const newId = usersData.users.length > 0 
-    ? Math.max(...usersData.users.map(u => u.id)) + 1 
+  const newId = usersData.users.length > 0
+    ? Math.max(...usersData.users.map(u => u.id)) + 1
     : 1;
-  
+
   const newUser = {
     id: newId,
     login: login,
-    password: hashPassword(password)
+    password: hashPassword(password),
+    favoriteCurrency: null
   };
-  
+
   usersData.users.push(newUser);
   writeUsers(usersData);
-  
+
   res.json({ success: true, message: 'Регистрация успешна' });
 });
 
 // 2. Логин (вход)
 app.post('/login', (req, res) => {
   const { login, password } = req.body;
-  
+
   if (!login || !password) {
     return res.status(400).json({ success: false, message: 'Логин и пароль обязательны' });
   }
-  
+
   const usersData = readUsers();
   const user = usersData.users.find(u => u.login === login);
-  
+
   if (!user) {
     return res.status(401).json({ success: false, message: 'Неверный логин или пароль' });
   }
-  
+
   const hashedInputPassword = hashPassword(password);
   if (user.password !== hashedInputPassword) {
     return res.status(401).json({ success: false, message: 'Неверный логин или пароль' });
   }
-  
-  res.json({ success: true, message: 'Вход выполнен успешно', userId: user.id });
+
+  res.json({ success: true, message: 'Вход выполнен успешно', userId: user.id, favoriteCurrency: user.favoriteCurrency });
 });
 
 // 3. Проверка авторизации (опционально)
@@ -110,5 +111,19 @@ app.get('/verify', (req, res) => {
 
 // Запуск сервера
 app.listen(PORT, () => {
+  // добавить favoriteCurrency: null всем пользователям, у кого его нет
+const usersData = readUsers();
+let needUpdate = false;
+
+for (let i = 0; i < usersData.users.length; i++) {
+  if (usersData.users[i].favoriteCurrency === undefined) {
+    usersData.users[i].favoriteCurrency = null;
+    needUpdate = true;
+  }
+}
+
+if (needUpdate) {
+  writeUsers(usersData);
+}
   console.log(`Бэкенд запущен на http://localhost:${PORT}`);
 });

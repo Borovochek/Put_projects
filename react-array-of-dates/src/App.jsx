@@ -17,10 +17,10 @@ function App() {
     setIsAuthenticated(authStatus);
   }, []);
 
-  const handleLogin = () => {
-    setIsAuthenticated(true);
-    localStorage.setItem('isAuth', 'true');
-  };
+const handleLogin = (userData) => {
+  setIsAuthenticated(true);
+  localStorage.setItem('isAuth', 'true');
+};
 
   const handleLogout = () => {
     setIsAuthenticated(false);
