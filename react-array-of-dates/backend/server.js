@@ -109,6 +109,27 @@ app.get('/verify', (req, res) => {
   res.json({ success: true, message: 'Сервер работает' });
 });
 
+app.post('/api/user/favorite', (req, res) => {
+  const { userId, currency } = req.body;
+  const usersData = readUsers();
+  const user = usersData.users.find(u => u.id === userId);
+  if (!user) return res.status(404).json({ success: false });
+  user.favoriteCurrency = currency;
+  writeUsers(usersData);
+  res.json({ success: true, favoriteCurrency: currency });
+});
+
+// DELETE – удалить любимую валюту (установить null)
+app.delete('/api/user/favorite', (req, res) => {
+  const { userId } = req.body;
+  const usersData = readUsers();
+  const user = usersData.users.find(u => u.id === userId);
+  if (!user) return res.status(404).json({ success: false });
+  user.favoriteCurrency = null;
+  writeUsers(usersData);
+  res.json({ success: true, favoriteCurrency: null });
+});
+
 // Запуск сервера
 app.listen(PORT, () => {
   // добавить favoriteCurrency: null всем пользователям, у кого его нет

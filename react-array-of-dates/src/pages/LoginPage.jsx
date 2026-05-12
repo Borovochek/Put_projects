@@ -25,7 +25,6 @@ export const LoginPage = ({ onLogin }) => {
 
       if (data.success) {
         message.success('Вход выполнен успешно!');
-        // console.log({ userId: data.userId, favoriteCurrency: data.favoriteCurrency });
         onLogin({ userId: data.userId, favoriteCurrency: data.favoriteCurrency });
       } else {
         message.error(data.message || 'Ошибка входа');
@@ -34,6 +33,7 @@ export const LoginPage = ({ onLogin }) => {
       message.error('Ошибка соединения с сервером. Запустите backend: node server.js');
     } finally {
       setLoading(false);
+
     }
   };
 

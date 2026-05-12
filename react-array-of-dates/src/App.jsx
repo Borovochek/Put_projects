@@ -11,20 +11,38 @@ import './App.css';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState(null);
 
-  useEffect(() => {
+  useEffect(() => { //сохранение состояния аут и данных пользователя при обновлении страницы
     const authStatus = localStorage.getItem('isAuth') === 'true';
+    const userData = localStorage.getItem('user');
+    console.log(user);
     setIsAuthenticated(authStatus);
+    if (userData) setUser(JSON.parse(userData));
   }, []);
 
-const handleLogin = (userData) => {
-  setIsAuthenticated(true);
-  localStorage.setItem('isAuth', 'true');
-};
+
+  const handleLogin = (userData) => {
+    setIsAuthenticated(true);
+    setUser({ id: userData.userId, favoriteCurrency: userData.favoriteCurrency });
+    localStorage.setItem('isAuth', 'true');
+    localStorage.setItem('user', JSON.stringify(userData));
+  };
 
   const handleLogout = () => {
     setIsAuthenticated(false);
     localStorage.removeItem('isAuth');
+    localStorage.removeItem('user');
+    localStorage.removeItem('selectedCurrency'); 
+  };
+
+  const handleUpdateUser = (newFavoriteCurrency) => {//newFavoriteCurrency поднимается из дочернего компонента
+    setUser(user => {
+      const updatedUser = { ...user, favoriteCurrency: newFavoriteCurrency };//из useState берём user, сохраняем новый объект в updatedUser, устанавливаем нов 
+      // значение user и localStorage 
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      return updatedUser;
+    });
   };
 
   if (!isAuthenticated) {
@@ -41,7 +59,7 @@ const handleLogin = (userData) => {
         <div className="app-content">
           <Routes>
             <Route path="/" element={<JSPage />} />
-            <Route path="/converter" element={<ConverterPage />} />
+            <Route path="/converter" element={<ConverterPage user={user} onUpdateUser={handleUpdateUser} />} />
             <Route path="/other" element={<OtherPage />} />
             <Route path="/calculator" element={<CalculatorPage />} />
           </Routes>

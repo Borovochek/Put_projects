@@ -4,10 +4,60 @@ import Icon, { EyeOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
 
 
-export const ExchangeRateTable = () => {
-    const [baseCurrency, setBaseCurrency] = useState('USD');
+export const ExchangeRateTable = ({ user, onUpdateUser }) => {
+    const getInitialBaseCurrency = () => {
+        const saved = localStorage.getItem('selectedCurrency');
+        if (saved) {
+            return saved;
+        }
+        return user.favoriteCurrency !== null ? user.favoriteCurrency : 'USD';
+    };
+
+    const [baseCurrency, setBaseCurrency] = useState(getInitialBaseCurrency);
+    // const [baseCurrency, setBaseCurrency] = useState(user.favoriteCurrency !== null ? user.favoriteCurrency : 'USD'); При обновлении страницы базовая валюта слетаетдо usd/favorite
     const [ratesData, setRatesData] = useState([]); // массив объектов {currency, rate}
     const [loading, setLoading] = useState(false);
+    const [favoriteLoading, setFavoriteLoading] = useState(false);
+
+    useEffect(() => {
+        localStorage.setItem('selectedCurrency', baseCurrency);
+    }, [baseCurrency]);
+    // const isFavorite = (user.favoriteCurrency === baseCurrency);
+    const isFavorite = user && user.favoriteCurrency === baseCurrency;
+    const handleFavoriteClick = async () => {
+        if (favoriteLoading) return;
+        setFavoriteLoading(true);
+        try {
+            if (isFavorite) {
+                await fetch('http://localhost:3000/api/user/favorite', {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId: user.id,
+                    }),
+                });
+                onUpdateUser(null);
+            } else {
+                await fetch('http://localhost:3000/api/user/favorite', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId: user.id,
+                        currency: baseCurrency,
+                    }),
+                });
+                onUpdateUser(baseCurrency);
+            }
+        } catch (error) {
+            message.error(`Ошибка ${error}`);
+        } finally {
+            setFavoriteLoading(false);
+        }
+    };
+
+    const onCurrencyChange = (value) => {
+        setBaseCurrency(value);
+    }
 
     const HeartSvg = () => (
         <svg width="1em" height="1em" fill="currentColor" viewBox="0 0 1024 1024">
@@ -35,20 +85,20 @@ export const ExchangeRateTable = () => {
     }, [baseCurrency]);
 
     async function getCurrencyRates(baseCurrency) {
-        if (!baseCurrency) return []; 
+        if (!baseCurrency) return [];
         const response = await fetch(`https://api.exchangerate-api.com/v4/latest/${baseCurrency}`);
         const data = await response.json();
         const allowedCurrencies = ['USD', 'EUR', 'RUB', 'JPY', 'CNY'];
         const filtered = allowedCurrencies.map(curr => ({
             currency: curr,
-            rate: data.rates[curr]  //через скобки, а не через точку, потому что имя свойства = переменная
+            rate: data.rates[curr]  //через скобки, а не через точку, потому что имя свойства = переменная 
         }));
         return filtered;
     }
 
-    const onChange = value => {
-        setBaseCurrency(value);
-    };
+    // const onChange = value => {
+    //     setBaseCurrency(value);
+    // };
     const onSearch = value => {
         console.log('search:', value);
     };
@@ -58,11 +108,7 @@ export const ExchangeRateTable = () => {
         { title: 'Курс', dataIndex: 'rate', key: 'rate' },
         { title: 'Действие', key: 'action', render: () => <a><EyeOutlined /></a> }
     ];
-    // const heartIconClass = `heartIconClass__${base ? base : activ}`;
 
-    // const hendleHeartColor = () => {
-    //     heartIconClass === heartIconClass__base ? 
-    // }
     return (
         <>
             {loading && <Spin />}
@@ -70,7 +116,7 @@ export const ExchangeRateTable = () => {
                 showSearch={{ optionFilterProp: 'label', onSearch }}
                 // placeholder="USD"
                 value={baseCurrency}
-                onChange={onChange}
+                onChange={onCurrencyChange}
                 options={[
                     {
                         value: 'USD',
@@ -95,13 +141,18 @@ export const ExchangeRateTable = () => {
                 ]}
             />
             <Tooltip title="Любимая валюта">
-                <HeartIcon style={{ color: 'none' }} />
+                {isFavorite ? (
+                    <HeartIcon style={{ color: '#ff4d4f', cursor: 'pointer' }} onClick={handleFavoriteClick} />
+                ) : (
+                    <HeartIcon style={{ color: 'black', cursor: 'pointer' }} onClick={handleFavoriteClick} />
+                )}
+
             </Tooltip>
             {!loading && <Table
-                dataSource={ratesData}  
+                dataSource={ratesData}
                 columns={columns}
                 loading={loading}
-                rowKey="currency"   
+                rowKey="currency"
             />}
         </>
     );
