@@ -21,22 +21,25 @@ function App() {
     if (userData) setUser(JSON.parse(userData));
   }, []);
 
-
   const handleLogin = (userData) => {
+    console.log('handleLogin вызван с:', userData);
     setIsAuthenticated(true);
-    setUser({ id: userData.userId, favoriteCurrency: userData.favoriteCurrency });
+    const user = { id: userData.userId, favoriteCurrency: userData.favoriteCurrency };
+    setUser(user);
     localStorage.setItem('isAuth', 'true');
-    localStorage.setItem('user', JSON.stringify(userData));
+    localStorage.setItem('user', JSON.stringify(user));
+    console.log('localStorage после логина:', localStorage);
   };
 
   const handleLogout = () => {
     setIsAuthenticated(false);
-    localStorage.removeItem('isAuth');
-    localStorage.removeItem('user');
-    localStorage.removeItem('selectedCurrency'); 
+    setUser(null);
+    localStorage.clear();
+    console.log('localStorage после logout:', localStorage);
   };
 
   const handleUpdateUser = (newFavoriteCurrency) => {//newFavoriteCurrency поднимается из дочернего компонента
+    console.log(newFavoriteCurrency)
     setUser(user => {
       const updatedUser = { ...user, favoriteCurrency: newFavoriteCurrency };//из useState берём user, сохраняем новый объект в updatedUser, устанавливаем нов 
       // значение user и localStorage 

@@ -21,20 +21,64 @@ app.use((req, res, next) => {
 
 // ---------- Вспомогательные функции ----------
 
-// Функция чтения пользователей из файла
+// Функция чтения пользователей из файла json
+// function readUsers() {
+//   try {
+//     const data = fs.readFileSync('users.json', 'utf8');
+//     return JSON.parse(data);
+//   } catch (error) {
+//     // Если файла нет или он пустой — возвращаем пустую структуру
+//     return { users: [] };
+//   }
+// }
+
+// Функция чтения пользователей из файла TXT
 function readUsers() {
   try {
-    const data = fs.readFileSync('users.json', 'utf8');
-    return JSON.parse(data);
+    const data = fs.readFileSync('users.txt', 'utf8');
+    // Разбиваем весь файл на массив строк
+    const lines = data.trim().split('\n').filter(line => line.trim() !== '');
+
+    // Каждая строка это один пользователь прим "1|ant|hash123|null"
+    const users = lines.map(line => {
+      const [id, login, password, favoriteCurrency] = line.split('|');// деструктуризацией создаю 4 переменные, сплитом разбиваю строку на их значения
+      return {
+        id: parseInt(id, 10),        // id как число
+        login: login,
+        password: password,         
+        favoriteCurrency: favoriteCurrency === 'null' ? null : favoriteCurrency
+      };//возвращает объект свойство: значение
+    });
+
+    // Возвращаемт js объект с массивом пользователей
+    return { users };
   } catch (error) {
-    // Если файла нет или он пустой — возвращаем пустую структуру
+    // Если файла нет или он пустой, то возвращается пустой объект
+    console.log('users.txt не найден, создадим при первой регистрации');
     return { users: [] };
   }
 }
 
 // Функция записи пользователей в файл
+// function writeUsers(data) {
+//   fs.writeFileSync('users.json', JSON.stringify(data, null, 2));
+// }
+
 function writeUsers(data) {
-  fs.writeFileSync('users.json', JSON.stringify(data, null, 2));
+  // Берем массив пользователей
+  const users = data.users || [];
+
+  // Превращаем каждого пользователя в строку: "1|ant|hash123|null"
+  const lines = users.map(user => {
+    const favoriteCurrency = user.favoriteCurrency === null ? 'null' : user.favoriteCurrency;
+    return `${user.id}|${user.login}|${user.password}|${favoriteCurrency}`;
+  });
+
+  // Объединяем строки через \n и записываем в файл
+  const txtContent = lines.join('\n');
+  fs.writeFileSync('users.txt', txtContent, 'utf8');
+
+  console.log(`users.txt обновлен, записано ${users.length} пользователей`);
 }
 
 // Функция хэширования пароля (SHA-256)
@@ -76,7 +120,12 @@ app.post('/register', (req, res) => {
   usersData.users.push(newUser);
   writeUsers(usersData);
 
-  res.json({ success: true, message: 'Регистрация успешна' });
+  res.json({
+    success: true,
+    message: 'Регистрация успешна',
+    userId: newUser.id,
+    favoriteCurrency: newUser.favoriteCurrency
+  });
 });
 
 // 2. Логин (вход)
@@ -133,18 +182,18 @@ app.delete('/api/user/favorite', (req, res) => {
 // Запуск сервера
 app.listen(PORT, () => {
   // добавить favoriteCurrency: null всем пользователям, у кого его нет
-const usersData = readUsers();
-let needUpdate = false;
+  const usersData = readUsers();
+  let needUpdate = false;
 
-for (let i = 0; i < usersData.users.length; i++) {
-  if (usersData.users[i].favoriteCurrency === undefined) {
-    usersData.users[i].favoriteCurrency = null;
-    needUpdate = true;
+  for (let i = 0; i < usersData.users.length; i++) {
+    if (usersData.users[i].favoriteCurrency === undefined) {
+      usersData.users[i].favoriteCurrency = null;
+      needUpdate = true;
+    }
   }
-}
 
-if (needUpdate) {
-  writeUsers(usersData);
-}
+  if (needUpdate) {
+    writeUsers(usersData);
+  }
   console.log(`Бэкенд запущен на http://localhost:${PORT}`);
 });

@@ -1,10 +1,11 @@
 import React from 'react';
-import { Select, Tooltip, Table, Spin } from 'antd';
+import { Select, Tooltip, Table, Spin, message } from 'antd';
 import Icon, { EyeOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
 
 
 export const ExchangeRateTable = ({ user, onUpdateUser }) => {
+
     const getInitialBaseCurrency = () => {
         const saved = localStorage.getItem('selectedCurrency');
         if (saved) {
@@ -13,22 +14,29 @@ export const ExchangeRateTable = ({ user, onUpdateUser }) => {
         return user.favoriteCurrency !== null ? user.favoriteCurrency : 'USD';
     };
 
-    const [baseCurrency, setBaseCurrency] = useState(getInitialBaseCurrency);
-    // const [baseCurrency, setBaseCurrency] = useState(user.favoriteCurrency !== null ? user.favoriteCurrency : 'USD'); При обновлении страницы базовая валюта слетаетдо usd/favorite
+    const [baseCurrency, setBaseCurrency] = useState(getInitialBaseCurrency());
+    // const [baseCurrency, setBaseCurrency] = useState(user.favoriteCurrency !== null ? user.favoriteCurrency : 'USD'); При обновлении страницы базовая валюта 
+    // слетает до usd/favorite, заменил на функцию getInitialBaseCurrency
     const [ratesData, setRatesData] = useState([]); // массив объектов {currency, rate}
     const [loading, setLoading] = useState(false);
-    const [favoriteLoading, setFavoriteLoading] = useState(false);
+    const [favoriteLoading, setFavoriteLoading] = useState(false);// состояние для защиты от даблклика
 
     useEffect(() => {
         localStorage.setItem('selectedCurrency', baseCurrency);
-    }, [baseCurrency]);
-    // const isFavorite = (user.favoriteCurrency === baseCurrency);
-    const isFavorite = user && user.favoriteCurrency === baseCurrency;
+    }, [baseCurrency]);// состояние для обновления страницы и сохранения значения выбранной валюты
+
+    useEffect(() => {
+        setBaseCurrency(getInitialBaseCurrency());
+    }, [user.favoriteCurrency]);
+
+    const isFavorite = user.favoriteCurrency === baseCurrency;
+
     const handleFavoriteClick = async () => {
         if (favoriteLoading) return;
         setFavoriteLoading(true);
         try {
             if (isFavorite) {
+                console.log('запрос на удаление')
                 await fetch('http://localhost:3000/api/user/favorite', {
                     method: 'DELETE',
                     headers: { 'Content-Type': 'application/json' },
@@ -38,6 +46,7 @@ export const ExchangeRateTable = ({ user, onUpdateUser }) => {
                 });
                 onUpdateUser(null);
             } else {
+                console.log('запрос на добавление', baseCurrency);
                 await fetch('http://localhost:3000/api/user/favorite', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -49,7 +58,8 @@ export const ExchangeRateTable = ({ user, onUpdateUser }) => {
                 onUpdateUser(baseCurrency);
             }
         } catch (error) {
-            message.error(`Ошибка ${error}`);
+            console.error('Favorite error:', error);  // ← ЛОГИРУЕМ В КОНСОЛЬ
+            message.error(`Ошибка: ${error.message}`);  // ← ТЕПЕРЬ message импортирован
         } finally {
             setFavoriteLoading(false);
         }
@@ -96,9 +106,6 @@ export const ExchangeRateTable = ({ user, onUpdateUser }) => {
         return filtered;
     }
 
-    // const onChange = value => {
-    //     setBaseCurrency(value);
-    // };
     const onSearch = value => {
         console.log('search:', value);
     };

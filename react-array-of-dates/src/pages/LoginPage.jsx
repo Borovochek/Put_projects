@@ -21,7 +21,6 @@ export const LoginPage = ({ onLogin }) => {
       });
 
       const data = await response.json();
-      console.log(data);
 
       if (data.success) {
         message.success('Вход выполнен успешно!');

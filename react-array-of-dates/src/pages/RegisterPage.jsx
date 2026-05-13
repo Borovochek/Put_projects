@@ -21,8 +21,9 @@ export const RegisterPage = ({ onSwitchToLogin, onLogin }) => {
       const data = await response.json();
 
       if (data.success) {
+        console.log(data);
         message.success('Регистрация успешна! Выполняется вход...');
-        onLogin();
+        onLogin({ userId: data.userId, favoriteCurrency: data.favoriteCurrency });
       } else {
         message.error(data.message || 'Ошибка регистрации');
       }

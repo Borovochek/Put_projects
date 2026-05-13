@@ -17,9 +17,7 @@ export const ConverterPage = ({ user, onUpdateUser }) => {
       children: 'Графики',
     }
   ];
-//   const onChange = key => {
-//   console.log(key);
-// };
+
   return (
     <>
       <Tabs defaultActiveKey="1" items={items}  />
