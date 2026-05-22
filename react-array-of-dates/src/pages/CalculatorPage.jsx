@@ -12,9 +12,11 @@ export const CalculatorPage = () => {
 
   // Обработка цифр и точки
   const handleNumberClick = (value) => {
+    console.log(value);
     // Если ждём второе число — очищаем дисплей
     if (waitingForSecondNumber) {
-      setDisplay(String(value));
+      // setDisplay(String(value)); Не нужно, т.к. данные в data уже строки
+      setDisplay(value);
       setWaitingForSecondNumber(false);
       return;
     }
@@ -24,7 +26,8 @@ export const CalculatorPage = () => {
 
     // Убираем ведущий ноль
     if (display === '0' && value !== '.') {
-      setDisplay(String(value));
+      // setDisplay(String(value));  Не нужно, т.к. данные в data уже строки
+      setDisplay(value);
     } else {
       setDisplay(display + value);
     }
@@ -105,9 +108,9 @@ export const CalculatorPage = () => {
   // Диспетчер обработчиков (по action)
   const getHandler = (action, value) => {
     switch (action) {
-      case 'number': return () => handleNumberClick(value);
+      case 'number': return () => handleNumberClick(value); //для вызова нужна стрелочная функция, т.к. функция вызывается с аргументами(value)
       case 'operator': return () => handleOperatorClick(value);
-      case 'equal': return handleEqual;
+      case 'equal': return handleEqual; //для вызова не нужна стрелочная функция, т.к. функция вызывается без аргументами(value)
       case 'clear': return handleClear;
       case 'delete': return handleDelete;
       default: return () => { };
@@ -115,23 +118,34 @@ export const CalculatorPage = () => {
   };
 
   return (
-    <div className="calculator-container">
-      <div className="calculator-display">
-        <input type="text" value={display} readOnly />
+    <div className="calculator">
+      <div className="calculator__display">
+        <input className="calculator__input" type="text" value={display} readOnly />
       </div>
-      <div className="calculator-buttons">
-        {buttons.map((btn) => (
-          <button
-            key={btn.value}
-            className={`${btn.type === 'operator' ? 'operator' : ''} 
-                   ${btn.value === '=' ? 'equal' : ''}
-                   ${btn.value === 'C' ? 'clear' : ''}
-                   ${btn.value === '←' ? 'delete' : ''}`}
-            onClick={getHandler(btn.action, btn.value)}
-          >
-            {btn.value}
-          </button>
-        ))}
+      <div className="calculator__buttons">
+        {buttons.map((btn) => {
+          // let modifier = '';
+          // if (btn.type === 'operator') modifier = 'operator';
+          // else if (btn.value === '=') modifier = 'equal';
+          // else if (btn.value === 'C') modifier = 'clear';
+          // else if (btn.value === '←') modifier = 'delete';
+
+          // const buttonClass = `calculator__button${modifier ? ` calculator__button--${modifier}` : ''}`; 
+          // Не нужно, т.к. в data уже есть action и можно присвоить всем эл-м доп.классы
+          const buttonClass = `calculator__button calculator__button--${btn.action}`;
+          return (
+            <button
+              key={btn.value}
+              className={buttonClass}
+              // onClick={() => getHandler(btn.action, btn.value)} Передавать в обработчик стрелочную функцию не верно! При клике стрелка вызывает getHandler, 
+              //который внутри вызывает handleNumberClick(value) (побочный эффект). Сама функция не возвращается, но вызов происходит.
+              onClick={getHandler(btn.action, btn.value)} //при рендере компонента функция вызывается сразу и возвращает либо стрелочную функцию (для number и op) 
+              //либо ссылку на обычную для остальных значений они сохраняются в onClick и вызываются по клику
+            >                                                    
+              {btn.value}
+            </button>
+          );
+        })}
       </div>
     </div>
   );

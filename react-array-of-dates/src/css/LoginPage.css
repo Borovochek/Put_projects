@@ -15,7 +15,7 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-.login-card input {
+.login-form__input {
   background-color: #FFFFFF;
   border-color: #D0D0D0;
   color: #333333;

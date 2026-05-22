@@ -21,8 +21,9 @@ export const RegisterPage = ({ onSwitchToLogin, onLogin }) => {
       const data = await response.json();
 
       if (data.success) {
+        console.log(data);
         message.success('Регистрация успешна! Выполняется вход...');
-        onLogin();
+        onLogin({ userId: data.userId, favoriteCurrency: data.favoriteCurrency });
       } else {
         message.error(data.message || 'Ошибка регистрации');
       }
@@ -37,12 +38,13 @@ export const RegisterPage = ({ onSwitchToLogin, onLogin }) => {
     <div className="register-container">
       <Card className="register-card">
         <h2 className="register-title">Регистрация</h2>
-        <Form name="register" onFinish={onFinish} autoComplete="off">
+        <Form className="register-form" name="register" onFinish={onFinish} autoComplete="off">
           <Form.Item
+            className="register-form__item"
             name="username"
             rules={[{ required: true, message: 'Введите логин!' }]}
           >
-            <Input prefix={<UserOutlined />} placeholder="Логин" />
+            <Input className="register-form__input" prefix={<UserOutlined />} placeholder="Логин" />
           </Form.Item>
 
           <Form.Item
@@ -53,6 +55,7 @@ export const RegisterPage = ({ onSwitchToLogin, onLogin }) => {
           </Form.Item>
 
           <Form.Item
+            className="register-form__item"
             name="confirm"
             dependencies={['password']}
             rules={[
@@ -67,10 +70,10 @@ export const RegisterPage = ({ onSwitchToLogin, onLogin }) => {
               }),
             ]}
           >
-            <Input.Password prefix={<LockOutlined />} placeholder="Подтвердите пароль" />
+            <Input.Password className="register-form__input" prefix={<LockOutlined />} placeholder="Подтвердите пароль" />
           </Form.Item>
 
-          <Form.Item>
+          <Form.Item className="register-form__item">
             <Button type="primary" htmlType="submit" loading={loading} block>
               Зарегистрироваться
             </Button>
