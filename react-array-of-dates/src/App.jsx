@@ -22,24 +22,24 @@ function App() {
   }, []);
 
   const handleLogin = (userData) => {
-    console.log('handleLogin вызван с:', userData);
+    // console.log('handleLogin вызван с:', userData);
     setIsAuthenticated(true);
     const user = { id: userData.userId, favoriteCurrency: userData.favoriteCurrency };
     setUser(user);
     localStorage.setItem('isAuth', 'true');
     localStorage.setItem('user', JSON.stringify(user));
-    console.log('localStorage после логина:', localStorage);
+    // console.log('localStorage после логина:', localStorage);
   };
 
   const handleLogout = () => {
     setIsAuthenticated(false);
     setUser(null);
     localStorage.clear();
-    console.log('localStorage после logout:', localStorage);
+    // console.log('localStorage после logout:', localStorage);
   };
 
   const handleUpdateUser = (newFavoriteCurrency) => {//newFavoriteCurrency поднимается из дочернего компонента
-    console.log(newFavoriteCurrency)
+    // console.log(newFavoriteCurrency)
     setUser(user => {
       const updatedUser = { ...user, favoriteCurrency: newFavoriteCurrency };//из useState берём user, сохраняем новый объект в updatedUser, устанавливаем нов 
       // значение user и localStorage 
