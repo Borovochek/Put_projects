@@ -2,10 +2,14 @@ import { useState } from 'react';
 import { Form, Input, Button, message, Card } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { RegisterPage } from './RegisterPage';
-import { loginUser } from '../components/API/api'; 
+import { loginUser } from '../components/API/api';
+import { useAuth } from '../contexts/AuthContext';
 import '../css/LoginPage.css';
 
-export const LoginPage = ({ onLogin }) => {
+
+export const LoginPage = () => {
+  const { handleLogin } = useAuth();
+
   const [isRegisterMode, setIsRegisterMode] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -14,7 +18,7 @@ export const LoginPage = ({ onLogin }) => {
     try {
       const data = await loginUser(values.username, values.password);
       message.success('Вход выполнен успешно!');
-      onLogin({ userId: data.userId, favoriteCurrency: data.favoriteCurrency });
+      handleLogin({ userId: data.userId, favoriteCurrency: data.favoriteCurrency });
     } catch (error) {
       message.error(error.message || 'Ошибка входа');
     } finally {
@@ -23,7 +27,7 @@ export const LoginPage = ({ onLogin }) => {
   };
 
   if (isRegisterMode) {
-    return <RegisterPage onSwitchToLogin={() => setIsRegisterMode(false)} onLogin={onLogin} />;
+    return <RegisterPage onSwitchToLogin={() => setIsRegisterMode(false)} />;
   }
 
   return (
@@ -69,30 +73,31 @@ export const LoginPage = ({ onLogin }) => {
 };
 
 
-  // const onFinish = async (values) => {
-  //   setLoading(true);
-  //   try {
-  //     const response = await fetch('http://localhost:3000/login', {
-  //       method: 'POST',
-  //       headers: { 'Content-Type': 'application/json' },
-  //       body: JSON.stringify({
-  //         login: values.username,
-  //         password: values.password,
-  //       }),
-  //     });
 
-  //     const data = await response.json();
+// const onFinish = async (values) => {
+//   setLoading(true);
+//   try {
+//     const response = await fetch('http://localhost:3000/login', {
+//       method: 'POST',
+//       headers: { 'Content-Type': 'application/json' },
+//       body: JSON.stringify({
+//         login: values.username,
+//         password: values.password,
+//       }),
+//     });
 
-  //     if (data.success) {
-  //       message.success('Вход выполнен успешно!');
-  //       onLogin({ userId: data.userId, favoriteCurrency: data.favoriteCurrency });
-  //     } else {
-  //       message.error(data.message || 'Ошибка входа');
-  //     }
-  //   } catch (error) {
-  //     message.error('Ошибка соединения с сервером. Запустите backend: node server.js');
-  //   } finally {
-  //     setLoading(false);
+//     const data = await response.json();
 
-  //   }
-  // };
+//     if (data.success) {
+//       message.success('Вход выполнен успешно!');
+//       onLogin({ userId: data.userId, favoriteCurrency: data.favoriteCurrency });
+//     } else {
+//       message.error(data.message || 'Ошибка входа');
+//     }
+//   } catch (error) {
+//     message.error('Ошибка соединения с сервером. Запустите backend: node server.js');
+//   } finally {
+//     setLoading(false);
+
+//   }
+// };

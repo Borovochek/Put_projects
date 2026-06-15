@@ -2,33 +2,21 @@ import { useState } from 'react';
 import { Form, Input, Button, message, Card } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import '../css/RegisterPage.css';
+import { registerUser } from '../components/API/api';
+import { useAuth } from '../contexts/AuthContext';
 
-export const RegisterPage = ({ onSwitchToLogin, onLogin }) => {
+export const RegisterPage = ({ onSwitchToLogin }) => {
+  const { handleLogin } = useAuth();
   const [loading, setLoading] = useState(false);
 
   const onFinish = async (values) => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:3000/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          login: values.username,
-          password: values.password,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        console.log(data);
-        message.success('Регистрация успешна! Выполняется вход...');
-        onLogin({ userId: data.userId, favoriteCurrency: data.favoriteCurrency });
-      } else {
-        message.error(data.message || 'Ошибка регистрации');
-      }
+      const data = await registerUser(values.username, values.password);
+      message.success('Регистрация успешна! Выполняется вход...');
+      handleLogin({ userId: data.userId, favoriteCurrency: data.favoriteCurrency });
     } catch (error) {
-      message.error('Ошибка соединения с сервером. Запустите backend: node server.js');
+      message.error(error.message || 'Ошибка регистрации');
     } finally {
       setLoading(false);
     }
