@@ -1,15 +1,18 @@
 import React from 'react';
 import { Tabs } from 'antd';
-import { ExchangeRateTable } from '../components/ExchangeRate/ExchangeRateTable'
+import { ExchangeRateTable } from '../components/ExchangeRateTable'
+// import { useAuth } from '../contexts/AuthContext';
 
 
 
-export const ConverterPage = ({ user, onUpdateUser }) => {
+export const ConverterPage = () => {
+    // const { user, handleUpdateUser } = useAuth();
   const items = [
     {
       key: '1',
       label: 'Курс валют',
-      children: <ExchangeRateTable user={user} и onUpdateUser={onUpdateUser} />,
+      children: <ExchangeRateTable />,
+      // children: <ExchangeRateTable user={user} и onUpdateUser={handleUpdateUser} />,
     },
     {
       key: '2',
